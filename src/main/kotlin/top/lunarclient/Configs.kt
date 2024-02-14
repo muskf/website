@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil.md5
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import top.lunarclient.plugins.Alert
 import java.io.File
 import kotlin.io.path.Path
 
@@ -55,6 +56,7 @@ class WebsiteConfig {
     val title: String = "LunarCN Official"
     val description: String = "Make LunarClient Great Again"
     val url: String = "http://127.0.0.1:8080"
+    val alert: Alert? = null
 }
 
 @Serializable

@@ -37,9 +37,17 @@ fun Application.configureRouting() {
             call.respondFTL("dashboard/login.ftl")
         }
 
+        get("/dashboard/register") {
+            call.respondFTL("dashboard/register.ftl")
+        }
+
         authenticate("auth-form") {
             post("/dashboard/login") {
                 call.sessions.set(call.principal<UserSession>())
+                call.respondRedirect("/dashboard")
+            }
+
+            post("/dashboard/register") {
                 call.respondRedirect("/dashboard")
             }
         }
