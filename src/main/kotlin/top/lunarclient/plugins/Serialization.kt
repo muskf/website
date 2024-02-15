@@ -13,11 +13,9 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import org.jetbrains.annotations.Contract
-import top.lunarclient.JSON
-import top.lunarclient.artifactsDir
-import top.lunarclient.configDir
-import top.lunarclient.websiteConfig
+import top.lunarclient.*
 import java.io.File
+import java.util.jar.JarFile
 
 
 val fileHashMap = HashMap<String, File>()
@@ -176,10 +174,49 @@ fun Application.configureSerialization() {
             )
         }
 
+
+        get("/api/plugins/info") {
+            val pluginList = mutableListOf<PluginInfo>()
+            // find plugins
+            pluginsDir.listFiles()?.forEach { file ->
+                if (file.isDirectory) {
+                    val category = when (file.name) {
+                        "agents" -> PluginInfo.Category.AGENT
+                        "lunarcn" -> PluginInfo.Category.CN
+                        "weave" -> PluginInfo.Category.WEAVE
+                        else -> null // unknown type
+                    }
+                    if (category != null) {
+                        file.listFiles()?.forEach { addon ->
+                            val hash = sha1(addon)
+                            pluginList.add(
+                                PluginInfo(
+                                    addon.name, hash, "/download/${hash}", category,
+                                    addon.readMeta()
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            call.respond(pluginList)
+        }
+
 //        get("/api/game/metadata") {
 //            call.respond(GameMetadata())
 //        }
     }
+}
+
+private fun File.readMeta(): PluginInfo.AddonMeta? {
+    val jar = JarFile(this)
+    val bytes = jar.getInputStream(jar.getEntry("addon.meta.json")).readAllBytes()
+    val meta = try {
+        JSON.decodeFromString<PluginInfo.AddonMeta>(String(bytes))
+    } catch (e: Exception) {
+        null
+    }
+    return meta
 }
 
 @Serializable
@@ -205,31 +242,37 @@ private fun GameVersionInfo.findArtifacts(json: LunarModuleConfig, natives: Nati
         if (file.isFile && file.name.endsWith(".jar")) {
             // default to classpath
             val sha1 = sha1(file)
-            list.add(GameArtifactInfo.Artifact(
-                file.name,
-                sha1,
-                "${websiteConfig.url}/download/$sha1",
-                GameArtifactInfo.Artifact.ArtifactType.CLASS_PATH
-            ))
+            list.add(
+                GameArtifactInfo.Artifact(
+                    file.name,
+                    sha1,
+                    "${websiteConfig.url}/download/$sha1",
+                    GameArtifactInfo.Artifact.ArtifactType.CLASS_PATH
+                )
+            )
         } else if (file.isDirectory && file.name == "EXTERNAL_FILES") {
             file.listFiles()?.forEach { externalFile ->
                 val sha1 = sha1(externalFile)
-                list.add(GameArtifactInfo.Artifact(
-                    externalFile.name,
-                    sha1,
-                    "${websiteConfig.url}/download/$sha1",
-                    GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
-                ))
+                list.add(
+                    GameArtifactInfo.Artifact(
+                        externalFile.name,
+                        sha1,
+                        "${websiteConfig.url}/download/$sha1",
+                        GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
+                    )
+                )
             }
         } else if (file.isDirectory && file.name == "JAVAAGENTS") {
             file.listFiles()?.forEach { javaagent ->
                 val sha1 = sha1(javaagent)
-                list.add(GameArtifactInfo.Artifact(
-                    javaagent.name,
-                    sha1,
-                    "${websiteConfig.url}/download/$sha1",
-                    GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
-                ))
+                list.add(
+                    GameArtifactInfo.Artifact(
+                        javaagent.name,
+                        sha1,
+                        "${websiteConfig.url}/download/$sha1",
+                        GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
+                    )
+                )
             }
         }
     }

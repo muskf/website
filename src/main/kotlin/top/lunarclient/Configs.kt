@@ -21,6 +21,10 @@ val artifactsDir = configDir.resolve("artifacts").apply {
     mkdirs()
 }
 
+val pluginsDir = configDir.resolve("plugins").apply {
+    mkdirs()
+}
+
 val configFile: File = configDir.resolve("config.json")
 
 val usersFile: File = Path(
