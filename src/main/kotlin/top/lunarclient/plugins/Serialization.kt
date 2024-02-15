@@ -5,18 +5,21 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.Contract
+import top.lunarclient.JSON
+import top.lunarclient.artifactsDir
+import top.lunarclient.configDir
 import top.lunarclient.websiteConfig
-import java.net.URL
+import java.io.File
 
 
 @Serializable
 data class LunarVersion(
     val id: String,
-    val default: Boolean,
+    @SerialName("default")
+    val isDefault: Boolean,
     val subversions: List<LunarSubVersion>
 )
 
@@ -69,10 +72,24 @@ data class GameArtifactInfo(
 }
 
 @Serializable
+data class LunarModuleConfig(
+    @SerialName("default")
+    val isDefault: Boolean = false,
+    val artifacts: List<GameArtifactInfo.Artifact> = emptyList(),
+    val textures: GameArtifactInfo.Textures? = null
+)
+
+@Serializable
 data class LunarModule(
     val id: String,
     val default: Boolean,
-)
+) {
+
+
+    companion object {
+        fun isDefault(file: File): Boolean = JSON.decodeFromString<LunarModuleConfig>(file.readText()).isDefault
+    }
+}
 
 @Serializable
 data class Blogpost(
@@ -150,6 +167,7 @@ fun Application.configureSerialization() {
     install(ContentNegotiation) {
         json()
     }
+
     routing {
         get("/api/launcher/metadata") {
             call.respond(LauncherMetadata(findVersions(), findBlogposts(), websiteConfig.alert))
@@ -157,10 +175,44 @@ fun Application.configureSerialization() {
     }
 }
 
-private fun findVersions() : List<LunarVersion> {
-    TODO("WIP")
+private fun findVersions(): List<LunarVersion> {
+    val list = mutableListOf<LunarVersion>()
+    artifactsDir.listFiles()?.forEach { file ->
+        if (file.isDirectory) {
+            val versionID = file.name
+            list.add(
+                LunarVersion(
+                    versionID,
+                    websiteConfig.defaultVersion.let { it.substring(0, it.lastIndexOf('.')) } == versionID,
+                    findSubVersions(versionID)))
+        }
+    }
+    return list
 }
 
-private fun findBlogposts() : List<Blogpost> {
-    TODO("WIP")
+private fun findSubVersions(id: String): List<LunarSubVersion> {
+    val list = mutableListOf<LunarSubVersion>()
+    artifactsDir.resolve(id).listFiles()?.forEach { file ->
+        if (file.isDirectory) {
+            val versionID = file.name
+            list.add(LunarSubVersion(versionID, websiteConfig.defaultVersion == versionID, findModules(versionID)))
+        }
+    }
+    return list
+}
+
+private fun findModules(id: String): List<LunarModule> {
+    val list = mutableListOf<LunarModule>()
+    val majorId = id.substring(0, id.lastIndexOf('.'))
+    artifactsDir.resolve(majorId).resolve(id).listFiles()?.forEach { file ->
+        if (file.isFile && file.name.endsWith(".json")) {
+            val moduleID = file.name.substring(0, file.name.lastIndexOf('.'))
+            list.add(LunarModule(moduleID, LunarModule.isDefault(file)))
+        }
+    }
+    return list
+}
+
+private fun findBlogposts(): List<Blogpost> = configDir.resolve("blogposts.json").let { file ->
+    if (file.exists()) JSON.decodeFromString<List<Blogpost>>(file.readText()) else emptyList()
 }

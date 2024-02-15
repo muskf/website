@@ -10,14 +10,18 @@ import kotlin.io.path.Path
 
 val JSON = Json { ignoreUnknownKeys = true; prettyPrint = true; encodeDefaults = true }
 
-val configFile: File = Path(
+val configDir = File(
     System.getProperty("user.home"),
-    ".cubewhy",
-    "website",
-    "config.json"
-).toFile().apply {
-    this.parentFile.mkdirs()
+    ".cubewhy/website"
+).apply {
+    mkdirs()
 }
+
+val artifactsDir = configDir.resolve("artifacts").apply {
+    mkdirs()
+}
+
+val configFile: File = configDir.resolve("config.json")
 
 val usersFile: File = Path(
     System.getProperty("user.home"),
@@ -57,6 +61,7 @@ class WebsiteConfig {
     val description: String = "Make LunarClient Great Again"
     val url: String = "http://127.0.0.1:8080"
     val alert: Alert? = null
+    val defaultVersion: String = "1.8.9"
 }
 
 @Serializable

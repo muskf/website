@@ -2,7 +2,7 @@
 
 ## 支持的(类)API后端
 
-1. [LunarCN API](https://github.com/CubeWhyMC/lunarclient.top) (完整支持)
+1. [LunarCN API](https://github.com/cubewhy/website) (完整支持)
 2. [Moonsworth API](https://api.lunarclientprod.com) (部分支持,详细见[此处](#与moonsworth-api的兼容性))
 
 ## 与Moonsworth API的兼容性
