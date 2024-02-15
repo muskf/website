@@ -62,6 +62,18 @@ class WebsiteConfig {
     val url: String = "http://127.0.0.1:8080"
     val alert: Alert? = null
     val defaultVersion: String = "1.8.9"
+
+    val defaultVMArgs: List<String> = mutableListOf(
+        "--add-modules",
+        "jdk.naming.dns",
+        "--add-exports",
+        "jdk.naming.dns/com.sun.jndi.dns\u003djava.naming",
+        "-Djna.boot.library.path\u003dnatives",
+        "-Dlog4j2.formatMsgNoLookups\u003dtrue",
+        "--add-opens",
+        "java.base/java.io\u003dALL-UNNAMED",
+        "-XX:+UseStringDeduplication"
+    )
 }
 
 @Serializable

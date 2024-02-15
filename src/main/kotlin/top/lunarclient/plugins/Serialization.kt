@@ -3,10 +3,14 @@ package top.lunarclient.plugins
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 import org.jetbrains.annotations.Contract
 import top.lunarclient.JSON
 import top.lunarclient.artifactsDir
@@ -17,24 +21,17 @@ import java.io.File
 
 @Serializable
 data class LunarVersion(
-    val id: String,
-    @SerialName("default")
-    val isDefault: Boolean,
-    val subversions: List<LunarSubVersion>
+    val id: String, @SerialName("default") val isDefault: Boolean, val subversions: List<LunarSubVersion>
 )
 
 @Serializable
 data class LunarSubVersion(
-    val id: String,
-    val default: Boolean,
-    val modules: List<LunarModule>
+    val id: String, val default: Boolean, val modules: List<LunarModule>
 )
 
 @Serializable
 data class GameArtifactInfo(
-    val launchTypeData: LaunchTypeData,
-    val textures: Textures,
-    val jre: RuntimeInfo
+    val launchTypeData: LaunchTypeData, val textures: Textures?, val jre: RuntimeInfo
 ) {
     @Serializable
     data class RuntimeInfo(
@@ -43,40 +40,30 @@ data class GameArtifactInfo(
 
     @Serializable
     data class Artifact(
-        val name: String,
-        val sha1: String,
-        val url: String,
-        val type: ArtifactType
+        val name: String, val sha1: String, val url: String, val type: ArtifactType
     ) {
         enum class ArtifactType {
-            CLASS_PATH,
-            EXTERNAL_FILE,
-            NATIVES,
-            JAVAAGENT // LCCN API, not support yet
+            CLASS_PATH, EXTERNAL_FILE, NATIVES, JAVAAGENT // LCCN API, not support yet
         }
     }
 
     @Serializable
     data class LaunchTypeData(
-        val artifacts: List<Artifact>,
-        val mainClass: String,
-        val ichor: Boolean = true
+        val artifacts: List<Artifact>, val mainClass: String, val ichor: Boolean = true
     )
 
     @Serializable
     data class Textures(
-        val indexUrl: String,
-        val indexSha1: String,
-        val baseUrl: String
+        val indexUrl: String, val indexSha1: String, val baseUrl: String
     )
 }
 
 @Serializable
 data class LunarModuleConfig(
-    @SerialName("default")
-    val isDefault: Boolean = false,
+    @SerialName("default") val isDefault: Boolean = false,
     val artifacts: List<GameArtifactInfo.Artifact> = emptyList(),
-    val textures: GameArtifactInfo.Textures? = null
+    val textures: GameArtifactInfo.Textures? = null,
+    val mainClass: String = "com.moonsworth.lunar.genesis.Genesis"
 )
 
 @Serializable
@@ -92,37 +79,32 @@ data class LunarModule(
 }
 
 @Serializable
-data class Blogpost(
-    val title: String,
-    val excerpt: String? = null, // only available on LCCN API
-    val image: String,
-    val link: String,
-    val author: String? = null, // moonsworth removed this in v3.0.0
-    @SerialName("button_text")
-    val buttonText: String? = null
+data class LauncherBlogpost(
+    val title: String, val excerpt: String? = null, // only available on LCCN API
+    val image: String, val link: String, val author: String? = null, // moonsworth removed this in v3.0.0
+    @SerialName("button_text") val buttonText: String? = null
+)
+
+@Serializable
+data class GameBlogpost(
+    val title: String
 )
 
 @Serializable
 data class Alert(
-    val name: String? = "Failed to get title",
-    val text: String? = null
+    val name: String? = "Failed to get title", val text: String? = null
 )
 
 @Serializable
 data class LauncherMetadata(
     val versions: List<LunarVersion>,
-    @SerialName("blogPosts")
-    val blogposts: List<Blogpost> = emptyList(),
+    @SerialName("blogPosts") val blogposts: List<LauncherBlogpost> = emptyList(),
     val alert: Alert? = null
 )
 
 @Serializable
 data class PluginInfo(
-    val name: String,
-    val sha1: String,
-    val downloadLink: String,
-    val category: Category,
-    val meta: AddonMeta? = null
+    val name: String, val sha1: String, val downloadLink: String, val category: Category, val meta: AddonMeta? = null
 ) {
     enum class Category {
         AGENT, CN, WEAVE;
@@ -157,9 +139,12 @@ data class PluginInfo(
 
 @Serializable
 data class CrashReportResult(
-    val id: String,
-    val url: String,
-    val message: String
+    val id: String, val url: String, val message: String
+)
+
+@Serializable
+data class GameMetadata(
+    @SerialName("blogPosts") val blogposts: List<GameBlogpost> = emptyList()
 )
 
 
@@ -172,7 +157,58 @@ fun Application.configureSerialization() {
         get("/api/launcher/metadata") {
             call.respond(LauncherMetadata(findVersions(), findBlogposts(), websiteConfig.alert))
         }
+
+        post("/api/launcher/launch") {
+            val info: GameVersionInfo = JSON.decodeFromString(call.receiveText())
+            val natives = info.findNatives()
+            val json = JSON.decodeFromString<LunarModuleConfig>(
+                info.version.resolveFolder().resolveModule(info.module).readText()
+            )
+            call.respond(
+                GameArtifactInfo(
+                    GameArtifactInfo.LaunchTypeData(
+                        info.findArtifacts(json, natives), json.mainClass
+                    ), json.textures, GameArtifactInfo.RuntimeInfo(websiteConfig.defaultVMArgs)
+                )
+            )
+        }
+
+//        get("/api/game/metadata") {
+//            call.respond(GameMetadata())
+//        }
     }
+}
+
+@Serializable
+data class GameVersionInfo(
+    // for getting artifacts
+    val version: String, val module: String, val branch: String,
+    // for getting natives
+    val os: String, val arch: String
+)
+
+@Serializable
+data class Natives(
+    val name: String, val sha1: String, val url: String
+) {
+    fun toArtifact() =
+        GameArtifactInfo.Artifact(name, sha1, url, GameArtifactInfo.Artifact.ArtifactType.NATIVES)
+}
+
+private fun GameVersionInfo.findArtifacts(json: LunarModuleConfig, natives: Natives?): List<GameArtifactInfo.Artifact> {
+    val list = if (natives != null) mutableListOf(natives.toArtifact()) else mutableListOf()
+    list.addAll(json.artifacts)
+    return list
+}
+
+private fun File.resolveModule(module: String) = this.resolve("$module.json")
+
+private fun GameVersionInfo.findNatives(): Natives? {
+    val nativesFile = configDir.resolve("natives.json")
+    if (!nativesFile.exists()) return null
+    val json = JSON.decodeFromString<JsonObject>(nativesFile.readText())
+    val nativesJson = json[this.os]!!.jsonObject[this.arch]!!
+    return JSON.decodeFromJsonElement(nativesJson)
 }
 
 private fun findVersions(): List<LunarVersion> {
@@ -180,11 +216,9 @@ private fun findVersions(): List<LunarVersion> {
     artifactsDir.listFiles()?.forEach { file ->
         if (file.isDirectory) {
             val versionID = file.name
-            list.add(
-                LunarVersion(
-                    versionID,
-                    websiteConfig.defaultVersion.let { it.substring(0, it.lastIndexOf('.')) } == versionID,
-                    findSubVersions(versionID)))
+            list.add(LunarVersion(versionID,
+                websiteConfig.defaultVersion.let { it.substring(0, it.lastIndexOf('.')) } == versionID,
+                findSubVersions(versionID)))
         }
     }
     return list
@@ -201,10 +235,14 @@ private fun findSubVersions(id: String): List<LunarSubVersion> {
     return list
 }
 
+private fun String.resolveFolder(): File {
+    val majorId = this.substring(0, this.lastIndexOf('.'))
+    return artifactsDir.resolve(majorId).resolve(this)
+}
+
 private fun findModules(id: String): List<LunarModule> {
     val list = mutableListOf<LunarModule>()
-    val majorId = id.substring(0, id.lastIndexOf('.'))
-    artifactsDir.resolve(majorId).resolve(id).listFiles()?.forEach { file ->
+    id.resolveFolder().listFiles()?.forEach { file ->
         if (file.isFile && file.name.endsWith(".json")) {
             val moduleID = file.name.substring(0, file.name.lastIndexOf('.'))
             list.add(LunarModule(moduleID, LunarModule.isDefault(file)))
@@ -213,6 +251,6 @@ private fun findModules(id: String): List<LunarModule> {
     return list
 }
 
-private fun findBlogposts(): List<Blogpost> = configDir.resolve("blogposts.json").let { file ->
-    if (file.exists()) JSON.decodeFromString<List<Blogpost>>(file.readText()) else emptyList()
+private fun findBlogposts(): List<LauncherBlogpost> = configDir.resolve("blogposts.json").let { file ->
+    if (file.exists()) JSON.decodeFromString<List<LauncherBlogpost>>(file.readText()) else emptyList()
 }
