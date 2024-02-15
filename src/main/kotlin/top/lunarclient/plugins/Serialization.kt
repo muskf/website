@@ -1,5 +1,6 @@
 package top.lunarclient.plugins
 
+import cn.hutool.crypto.SecureUtil
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -18,6 +19,8 @@ import top.lunarclient.configDir
 import top.lunarclient.websiteConfig
 import java.io.File
 
+
+val fileHashMap = HashMap<String, File>()
 
 @Serializable
 data class LunarVersion(
@@ -196,9 +199,46 @@ data class Natives(
 }
 
 private fun GameVersionInfo.findArtifacts(json: LunarModuleConfig, natives: Natives?): List<GameArtifactInfo.Artifact> {
+    // get artifacts from fs
     val list = if (natives != null) mutableListOf(natives.toArtifact()) else mutableListOf()
+    this.version.resolveFolder().resolve("artifacts").resolve(module).listFiles()?.forEach { file ->
+        if (file.isFile && file.name.endsWith(".jar")) {
+            // default to classpath
+            val sha1 = sha1(file)
+            list.add(GameArtifactInfo.Artifact(
+                file.name,
+                sha1,
+                "${websiteConfig.url}/download/$sha1",
+                GameArtifactInfo.Artifact.ArtifactType.CLASS_PATH
+            ))
+        } else if (file.isDirectory && file.name == "EXTERNAL_FILES") {
+            file.listFiles()?.forEach { externalFile ->
+                val sha1 = sha1(externalFile)
+                list.add(GameArtifactInfo.Artifact(
+                    externalFile.name,
+                    sha1,
+                    "${websiteConfig.url}/download/$sha1",
+                    GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
+                ))
+            }
+        } else if (file.isDirectory && file.name == "JAVAAGENTS") {
+            file.listFiles()?.forEach { javaagent ->
+                val sha1 = sha1(javaagent)
+                list.add(GameArtifactInfo.Artifact(
+                    javaagent.name,
+                    sha1,
+                    "${websiteConfig.url}/download/$sha1",
+                    GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE
+                ))
+            }
+        }
+    }
     list.addAll(json.artifacts)
     return list
+}
+
+private fun sha1(file: File): String = SecureUtil.sha1(file).apply {
+    if (!fileHashMap.containsKey(this)) fileHashMap[this] = file
 }
 
 private fun File.resolveModule(module: String) = this.resolve("$module.json")

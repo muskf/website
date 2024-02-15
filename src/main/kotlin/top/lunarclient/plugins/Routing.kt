@@ -41,6 +41,15 @@ fun Application.configureRouting() {
             call.respondFTL("dashboard/register.ftl")
         }
 
+        get("/download/{hash}") {
+            val hash = call.parameters["hash"]
+            if (fileHashMap.containsKey(hash)) {
+                call.respond(fileHashMap[hash]!!.inputStream())
+            } else {
+                call.respond(HttpStatusCode.NotFound, "Not found")
+            }
+        }
+
         authenticate("auth-form") {
             post("/dashboard/login") {
                 call.sessions.set(call.principal<UserSession>())
