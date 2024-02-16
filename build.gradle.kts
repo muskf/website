@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("cn.hutool:hutool-crypto:5.8.25")
+    implementation("cn.hutool:hutool-crypto:5.8.26")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
