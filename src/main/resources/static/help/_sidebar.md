@@ -12,6 +12,7 @@
   [配置](celestial/config)
 
 - 网站
+  [镜像](website/mirror)
   [自动同步工件是如何工作的](website/howitworks/sync-artifact)
 
 - Lunar API
