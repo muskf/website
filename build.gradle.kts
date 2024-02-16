@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     implementation("cn.hutool:hutool-crypto:5.8.25")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
 
@@ -35,6 +36,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-websockets-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-freemarker:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")

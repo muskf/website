@@ -2,6 +2,7 @@
 - [欢迎](welcome.md)
 
 - Celestial
+  [下载](celestial/download)
   [尚未完成的内容](celestial/wip)
   [启动](celestial/launch)
   [排除报错](celestial/troubleshooting)

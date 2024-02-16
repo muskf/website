@@ -280,7 +280,7 @@ private fun GameVersionInfo.findArtifacts(json: LunarModuleConfig, natives: Nati
     return list
 }
 
-private fun sha1(file: File): String = SecureUtil.sha1(file).apply {
+fun sha1(file: File): String = SecureUtil.sha1(file).apply {
     if (!fileHashMap.containsKey(this)) fileHashMap[this] = file
 }
 
