@@ -10,7 +10,7 @@
 
 > 点击下面的链接跳转到下载页面
 
-[lunarclient.top](https://www.lunarclient.top/download/celestial)
+[lunarclient.top](https://www.lunarclient.top/link/celestial)
 
 [github.ink](https://github.ink/CubeWhyMC/celestial)
 
