@@ -52,6 +52,11 @@ fun Application.configureRouting() {
         post("/webhook/gh-release") {
             val file = configDir.resolve("celestial-cached.jar")
             val json = JSON.decodeFromString<ReleaseWebHook>(call.receiveText())
+            if (json.action == null) {
+                // just ping
+                call.respond(204)
+                return@post
+            }
             val url = json.release.assets[0].downloadUrl
             val request = Request.Builder()
                 .get()
@@ -143,7 +148,7 @@ fun Application.configureRouting() {
 
 @Serializable
 data class ReleaseWebHook(
-    val action: String,
+    val action: String? = null,
     val release: Release
 ) {
     @Serializable
