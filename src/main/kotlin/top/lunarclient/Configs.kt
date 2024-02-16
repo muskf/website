@@ -21,6 +21,10 @@ val artifactsDir = configDir.resolve("artifacts").apply {
     mkdirs()
 }
 
+val mirrorDir = configDir.resolve("mirror").apply {
+    mkdirs()
+}
+
 val pluginsDir = configDir.resolve("plugins").apply {
     mkdirs()
 }

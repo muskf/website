@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import top.lunarclient.JSON
 import top.lunarclient.configDir
+import top.lunarclient.mirrorDir
 import top.lunarclient.websiteConfig
 
 var syncHash: String? = null
@@ -47,6 +48,35 @@ fun Application.configureRouting() {
 
         get("/download") {
             call.respondRedirect("/help/#/celestial/download")
+        }
+
+        get("/mirror") {
+            call.respondRedirect("/help/#/website/mirror")
+        }
+
+        get("/mirror/textures/{path...}") {
+            val path = call.parameters.getAll("path")
+            val target = path!!.joinToString("/")
+            val targetFile = mirrorDir.resolve("textures").resolve(target)
+            if (targetFile.exists()) call.respond(targetFile.inputStream())
+            else {
+                // cache
+                val url = "https://textures.lunarclientcdn.com/$target"
+                val request = Request.Builder()
+                    .url(url)
+                    .get()
+                    .build()
+                with(httpClient.newCall(request).execute()) {
+                    this.body?.bytes()?.let { it ->
+                        targetFile.apply {
+                            targetFile.parentFile.mkdirs()
+                            createNewFile()
+                            writeBytes(it)
+                        }
+                    }
+                }
+                call.respond(targetFile.inputStream())
+            }
         }
 
         post("/webhook/gh-release") {
