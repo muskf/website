@@ -13,13 +13,6 @@
 
 - 网站
   [镜像](website/mirror)
-  [自动同步工件是如何工作的](website/howitworks/sync-artifact)
-
-- Lunar API
-  [启动](lunar/launch-api)
-  [启动器更新](lunar/update)
-
-- 开发LunarCN模组
-  [开始](mods/start)
+  [为我们添砖加瓦](website/openpr)
 
 

@@ -1,24 +1,31 @@
 ## 镜像源
 
-为中国玩家提供Lunar下载镜像源
+## 镜像源列表
 
-这里缓存了textures, 使用方法见下文
+> 如果你想将你搭建的镜像源添加到此处, 请[开pr](/website/openpr)
 
-## 使用方法
-
-将响应中的`https://textures.lunarclientcdn.com/` 换为
-`https://www.lunarclient.top/mirror/textures/`
-
-## 工作原理
-
-> 由于每个文件和sha1的绑定是唯一的, 所以不用考虑文件变化问题
-
-在请求时服务端会判断本地是否有该文件, 若没有, 就会进行下载, 然后发送响应
-
-若有, 将会直接响应文件
+1. mirror.mcip.link (由15搭建)
 
 ## 搭建加速源
 
-> 我们欢迎你来搭建加速源来分担主镜像源负担
+推荐[AnyMirror](https://github.com/cubewhy/AnyMirror), 具体搭建方法请见下文
 
-WIP
+### 搭建AnyMirror
+
+1 [构建AnyMirror](#构建anymirror)
+
+#### 构建AnyMirror
+
+1. 下载OpenJDK
+2. Clone 项目
+3. 运行`gradlew build`
+
+#### 开始运行
+
+在`build/libs`找到工件, 然后复制到一个安全的地方
+
+输入`java -jar AnyMirror.jar` 开始运行(请替换为实际的名称)
+
+#### 后续步骤
+
+你可能需要购买CDN来加速访问, 若要为你的网站启用TLS, 请在构建时编辑 application.properties 来增加证书
