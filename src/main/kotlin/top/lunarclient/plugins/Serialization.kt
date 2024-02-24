@@ -202,16 +202,16 @@ fun Application.configureSerialization() {
             call.respond(pluginList)
         }
 
-//        get("/api/game/metadata") {
-//            call.respond(GameMetadata())
-//        }
+        get("/api/game/metadata") {
+            call.respond(GameMetadata())
+        }
     }
 }
 
 private fun File.readMeta(): PluginInfo.AddonMeta? {
     val jar = JarFile(this)
-    val bytes = jar.getInputStream(jar.getEntry("addon.meta.json")).readAllBytes()
     val meta = try {
+        val bytes = jar.getInputStream(jar.getEntry("addon.meta.json")).readAllBytes()
         JSON.decodeFromString<PluginInfo.AddonMeta>(String(bytes))
     } catch (e: Exception) {
         null
