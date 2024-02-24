@@ -42,6 +42,10 @@ fun Application.configureRouting() {
             call.respondFTL("help.ftl")
         }
 
+        get("/donate") {
+            call.respondFTL("donate.ftl")
+        }
+
         get("/api") {
             call.respondRedirect("/help")
         }

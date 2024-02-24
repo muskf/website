@@ -15,5 +15,5 @@
 >>> resources - 资源目录
 >>>> static - 静态文件目录
 >>>>> help - 帮助文档源代码
->
+> 
 >>>> templates - 模板目录
