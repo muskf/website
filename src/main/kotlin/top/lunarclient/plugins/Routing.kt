@@ -154,6 +154,13 @@ fun Application.configureRouting() {
             )
         }
 
+
+        get("/api/download/{hash}") {
+            // 兼容celestial
+            val hash = call.parameters["hash"]
+            call.respondRedirect("/download/${hash}")
+        }
+
         get("/download/{hash}") {
             val hash = call.parameters["hash"]
             if (fileHashMap.containsKey(hash)) {
