@@ -20,6 +20,8 @@
                 navigationPosition: 'right',
                 observer: true,
                 credits: {enabled: true, label: 'Made with Love 🥰', position: 'right'},
+
+                // TODO 在页面被用户打开之后再渲染动画
             });
 
             //methods
@@ -37,14 +39,25 @@
             <a class="animate__animated animate__bounce">CubeWhy</a><br>
             <div>
                 <a class="animate__animated animate__backInLeft" href="https://github.com/cubewhy">GitHub</a>
-                <a class="animate__animated animate__backInRight" href="https://space.bilibili.com/1106744676">Bilibili</a>
+                <a class="animate__animated animate__backInRight"
+                   href="https://space.bilibili.com/1106744676">Bilibili</a>
             </div>
         </div>
     </div>
-    <div class="section " id="celestial"  style="height: 966px;">
-
+    <div class="section" id="celestial" style="height: 966px;">
+        <div class="main-field">
+            <div class="project_logo animate__animated animate__backInUp">
+                <img src="/favicon.ico" alt="celestial logo" style="width: 200px;height: 200px;">
+            </div>
+            <div class="project_name animate__animated animate__bounce">
+                <h3>Celestial</h3>
+            </div>
+            <div class="animate__animated animate__backInDown">
+                <a href="/lccn">访问网站</a>
+            </div>
+        </div>
     </div>
-<#--    <div class="section"></div>-->
+    <#--    <div class="section"></div>-->
 </div>
 </body>
 </html>

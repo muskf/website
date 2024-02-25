@@ -26,6 +26,11 @@ ul {
     text-align: center;
     margin: 0 auto;
     text-shadow: 1pt 1pt 2pt #ccc;
+    cursor: none;
+}
+
+.project_logo {
+    cursor: none;
 }
 
 .text {
@@ -39,6 +44,14 @@ ul {
     margin: 0 0.6em;
     width: 12em;
     cursor: pointer;
+}
+
+.project_name {
+    text-decoration: none;
+    color: #00bcd4;
+    display: inline-block;
+    /*margin: 0 0.6em;*/
+    width: 12em;
 }
 
 .main-field {
@@ -75,5 +88,10 @@ ul {
     #top {
         background-size: cover;
         background-image: url(https://www.loliapi.com/acg/);
+    }
+
+    #celestial {
+        background-size: cover;
+        background-image: url(/images/galaxy-night-view.jpg);
     }
 }
