@@ -36,11 +36,13 @@
             <div class="logo animate__animated animate__backInUp">
                 <img src="/images/cubewhy.png" alt="logo">
             </div>
-            <a class="animate__animated animate__bounce">CubeWhy</a><br>
+            <h3 class="animate__animated animate__bounce rainbow-text" style="font-size: 35px">QBY</h3><br>
             <div>
                 <a class="animate__animated animate__backInLeft" href="https://github.com/cubewhy">GitHub</a>
                 <a class="animate__animated animate__backInRight"
-                   href="https://space.bilibili.com/1106744676">Bilibili</a>
+                   href="/donate">赞助</a>
+                <a class="animate__animated animate__backInRight"
+                   href="https://space.bilibili.com/1106744676">哔哩哔哩</a>
             </div>
         </div>
     </div>
@@ -54,6 +56,12 @@
             </div>
             <div class="animate__animated animate__backInDown">
                 <a href="/lccn">访问网站</a>
+            </div>
+            <div>
+                <a class="animate__animated animate__backInRight"
+                   href="/donate">赞助</a>
+                <a class="animate__animated animate__backInRight"
+                   href="/help">帮助文档</a>
             </div>
         </div>
     </div>
