@@ -19,7 +19,6 @@
                 navigation: true,
                 navigationPosition: 'right',
                 observer: true,
-                lazyLoading: false,
                 credits: {enabled: true, label: 'Made with Love 🥰', position: 'right'},
             });
 
@@ -30,7 +29,7 @@
 </head>
 <body style="overflow: hidden; height: 100%;">
 <div id="fullpage" style="height: 100%; position: relative; touch-action: none; transform: translate3d(0px, 0px, 0px);">
-    <div id="top" class="section active" style="height: 966px;">
+    <div id="top" class="section" style="height: 966px;">
         <div class="main-field">
             <div class="logo animate__animated animate__backInUp">
                 <img src="/images/cubewhy.png" alt="logo">
@@ -42,10 +41,10 @@
             </div>
         </div>
     </div>
-    <div class="section" id="celestial">
+    <div class="section " id="celestial"  style="height: 966px;">
 
     </div>
-    <div class="section">TEST</div>
+<#--    <div class="section"></div>-->
 </div>
 </body>
 </html>

@@ -34,6 +34,7 @@ fun Application.configureRouting() {
         get("/") {
             call.respondFTL("index.ftl")
         }
+
         get("/lccn") {
             call.respondFTL(
                 "celestial/index.ftl",
@@ -43,6 +44,18 @@ fun Application.configureRouting() {
 
         get("/help") {
             call.respondFTL("help.ftl")
+        }
+        
+        get("/docs") {
+            call.respondRedirect("/help")
+        }
+
+        get("/celestial") {
+            call.respondRedirect("/lccn")
+        }
+
+        get("/lunarcn") {
+            call.respondRedirect("/lccn")
         }
 
         get("/donate") {
