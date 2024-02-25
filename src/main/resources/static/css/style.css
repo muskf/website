@@ -37,6 +37,13 @@ ul {
     text-shadow: 1pt 1pt 2pt #ccc;
 }
 
+.rainbow-text {
+    background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    -webkit-background-clip: text;
+    color: transparent;
+    display: inline;
+}
+
 .main-field a {
     text-decoration: none;
     color: #ea5413;
@@ -93,5 +100,10 @@ ul {
     #celestial {
         background-size: cover;
         background-image: url(/images/galaxy-night-view.jpg);
+    }
+
+    #cdn {
+        background-size: cover;
+        background-image: url(/images/background-cdn.webp);
     }
 }

@@ -57,7 +57,20 @@
             </div>
         </div>
     </div>
-    <#--    <div class="section"></div>-->
+    <div class="section" id="cdn">
+        <div class="main-field">
+            <div class="project_logo animate__animated animate__backInUp">
+                <img src="/images/attack/attack2.jpg" alt="CDN">
+            </div>
+            <div class="project_name animate__animated animate__bounce">
+                <h3 class="rainbow-text" style="font-size: 35px">NUEE CDN</h3>
+                <p>站长推荐, 1个t都打不死</p>
+            </div>
+            <div>
+                <a href="https://cdn.nuee.cn">现在购买(将离开本站点)</a>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
