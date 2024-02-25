@@ -32,8 +32,11 @@ fun Application.configureRouting() {
 
     routing {
         get("/") {
+            call.respondFTL("index.ftl")
+        }
+        get("/lccn") {
             call.respondFTL(
-                "index.ftl",
+                "celestial/index.ftl",
                 mapOf("title" to websiteConfig.title, "description" to websiteConfig.description)
             )
         }
@@ -43,6 +46,14 @@ fun Application.configureRouting() {
         }
 
         get("/donate") {
+//            val ua = call.request.headers["User-Agent"]!!
+//            if ("micromessenger" in ua) {
+//                // WeChat
+//                // TODO Redirect wechat
+//            } else if ("AlipayClient" in ua) {
+//                // Alipay
+//                // TODO Redirect Alipay
+//            } else call.respondFTL("donate.ftl")
             call.respondFTL("donate.ftl")
         }
 

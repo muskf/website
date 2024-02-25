@@ -1,266 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    border: 0;
+    user-select:none;
+    overflow: hidden;
 }
 
 body {
-    background: #1f242d;
-    color: #fff;
+    font-size: 62.5%;
+    color: #000;
 }
 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 10%;
-    background: transparent;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
+ul {
+    list-style-type: none;
 }
 
-.sponsors {
-  background-color: #1f242d;
-  color: #fff;
-  padding: 50px 0;
+.section {
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
+    overflow: hidden;
 }
-
-.sponsor-list {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.sponsor-list h2 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.sponsor-list ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sponsor-list li {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-/* 调整赞助商名单的样式和排版 */
 
 .logo {
-    font-size: 25px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    cursor: default;
-    opacity: 0;
-    animation: slideRight 1s ease forwards;
+    text-align: center;
+    margin: 0 auto;
+    text-shadow: 1pt 1pt 2pt #ccc;
 }
 
-.navbar a {
+.text {
+    text-shadow: 1pt 1pt 2pt #ccc;
+}
+
+.main-field a {
+    text-decoration: none;
+    color: #ea5413;
     display: inline-block;
-    font-size: 18px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    margin-left: 35px;
-    opacity: 0;
-    transition: 0.3s;
-    animation: slideTop 1s ease forwards;
-    animation-delay: calc(.2s * var(--i));
+    margin: 0 0.6em;
+    width: 12em;
+    cursor: pointer;
 }
 
-.navbar a:hover,
-.navbar a.active {
-    color: #b7b2a9;
+.main-field {
+    font-size: 1.7em;
+    font-weight: bold;
+    padding: -70px 0;
 }
 
-.home {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 70px 10% 0;
-}
 
-.home-content {
-    max-width: 600px;
-}
-
-.home-content h3 {
-    font-size: 32px;
-    font-weight: 700;
-    opacity: 0;
-    animation: slideBottom 1s ease forwards;
-    animation-delay: .7s;
-}
-
-.home-content h3:nth-of-type(2) {
-    margin-bottom: 30px;
-    opacity: 0;
-    animation: slideTop 1s ease forwards;
-    animation-delay: .7s;
-}
-
-.home-content h3 span {
-    color: #b7b2a9;
-}
-
-.home-content h1 {
-    font-size: 56px;
-    font-weight: 700;
-    margin: -3px 0;
-    opacity: 0;
-    animation: slideRight 1s ease forwards;
-    animation-delay: 1s;
-}
-
-.home-content p {
-    font-size: 16px;
-    opacity: 0;
-    animation: slideLeft 1s ease forwards;
-    animation-delay: 0.7s;
-}
-
-.home-img img {
-    max-width: 450px;
-    border-radius: 50%;
-    margin-right: -20px;
-    box-shadow: 0 0 20px #b7b2a9;
-    opacity: 0;
-    animation: zoomIn 1s ease forwards, floatImage 4s ease-in-out infinite;
-    animation-delay: 2s, 3s;
-}
-
-.social-media a {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: 2px solid #b7b2a9;
-    border-radius: 50%;
-    color: #b7b2a9;
-    font-size: 20px;
-    text-decoration: none;
-    margin: 30px 15px 30px 0;
-    transition: 0.5s ease;
-    opacity: 0;
-    animation: slideLeft 1s ease forwards;
-    animation-delay: calc(0.2s * var(--i));
-}
-
-.social-media a:hover {
-    background: #b7b2a9;
-    color: #1f242d;
-    box-shadow: 0 0 20px #b7b2a9;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 28px;
-    background: #b7b2a9;
-    text-decoration: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px #b7b2a9;
-    font-size: 16px;
-    color: #1f242d;
-    letter-spacing: 1px;
-    font-weight: 600;
-    transition: 0.5s ease;
-    opacity: 0;
-    animation: slideTop 1s ease forwards;
-    animation-delay: 2s;
-}
-
-.btn:hover {
-    box-shadow: 0 0 20px #b7b2a9;
-}
-
-.btn:active {
-    background: none;
-    color: #b7b2a9;
-    border: 2px solid #b7b2a9;
-}
-
-/* 动画 */
-
-@keyframes slideRight {
-    0% {
-        transform: translateX(-100px);
+@media all and (orientation: landscape) {
+    .logo img {
+        width: 16em;
     }
 
-    100% {
-        transform: translateX(0);
-        opacity: 1;
+    .project_logo img {
+        width: 50em;
+    }
+
+    .text {
+        font-size: 2.2em;
+        line-height: 1.6em;
+        margin: 0.3em 0 1em;
+    }
+    .btn {
+        font-size: 1.7em;
+        line-height: 1.7em;
+        width: 9.8em;
+        height: 2em;
+        border-radius: 1em;
     }
 }
 
-@keyframes slideLeft {
-    0% {
-        transform: translateX(100px);
-    }
 
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideTop {
-    0% {
-        transform: translateY(100px);
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideBottom {
-    0% {
-        transform: translateY(-100px);
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes zoomIn {
-    0% {
-        transform: scale(0);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes floatImage {
-    0% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-24px);
-    }
-
-    100% {
-        transform: translateY(0);
+@media all and (orientation: landscape) {
+    #top {
+        background-size: cover;
+        background-image: url(https://www.loliapi.com/acg/);
+        float: left;
+        width: 100%;
     }
 }
