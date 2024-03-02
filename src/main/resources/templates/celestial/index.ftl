@@ -18,7 +18,7 @@
   <!-- icon -->
   <script src="/js/theme.js"></script>
   <!-- lenis -->
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis/dist/lenis.min.js"></script>
   <script src="/js/lenis.js"></script>
 </head>
 <body data-lenis-prevent-touch>
@@ -46,19 +46,19 @@
       height: auto;
     }
 
-    .lenis.lenis-smooth {
+    。lenis。lenis-smooth {
       scroll-behavior: auto;
     }
 
-    .lenis.lenis-smooth [data-lenis-prevent] {
+    。lenis。lenis-smooth [data-lenis-prevent] {
       overscroll-behavior: contain;
     }
 
-    .lenis.lenis-stopped {
+    。lenis。lenis-stopped {
       overflow: hidden;
     }
 
-    .lenis.lenis-scrolling iframe {
+    。lenis。lenis-scrolling iframe {
       pointer-events: none;
     }
   </style>
