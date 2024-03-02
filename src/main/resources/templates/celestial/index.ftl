@@ -18,7 +18,7 @@
   <!-- icon -->
   <script src="/js/theme.js"></script>
   <!-- lenis -->
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis/dist/lenis.min.js"></script>
   <script src="/js/lenis.js"></script>
 </head>
 <body data-lenis-prevent-touch>
