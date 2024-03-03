@@ -10,6 +10,11 @@ import kotlin.io.path.Path
 
 val JSON = Json { ignoreUnknownKeys = true; prettyPrint = true; encodeDefaults = true }
 
+// 阻止除www.lunarclient.top和127.0.0.1的访问, 对API不生效
+const val BLOCK_UNOFFICIAL_HOST = true
+
+val KNOWN_HOSTS = mutableListOf("www.lunarclient.top", "lunarclient.top", "www.lunarcn.top", "lunarcn.top", "www.lunarcn.lol", "lunarcn.lol", "127.0.0.1")
+
 val configDir = File(
     System.getProperty("user.home"),
     ".cubewhy/website"

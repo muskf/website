@@ -14,10 +14,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import top.lunarclient.JSON
-import top.lunarclient.configDir
-import top.lunarclient.mirrorDir
-import top.lunarclient.websiteConfig
+import top.lunarclient.*
 
 var syncHash: String? = null
 val httpClient = OkHttpClient()
@@ -31,21 +28,33 @@ fun Application.configureRouting() {
 
 
     routing {
+        suspend fun checkOfficial(call: ApplicationCall, function: suspend (call: ApplicationCall) -> Unit) {
+            if (!(BLOCK_UNOFFICIAL_HOST && KNOWN_HOSTS.contains(call.request.host()))) {
+                call.respondFTL("blocked.ftl")
+                return
+            }
+            function(call)
+        }
+
         get("/") {
-            call.respondFTL("index.ftl")
+            checkOfficial(call) { call ->
+                call.respondFTL("index.ftl")
+            }
         }
 
         get("/lccn") {
-            call.respondFTL(
-                "celestial/index.ftl",
-                mapOf("title" to websiteConfig.title, "description" to websiteConfig.description)
-            )
+            checkOfficial(call) { call ->
+                call.respondFTL(
+                    "celestial/index.ftl",
+                    mapOf("title" to websiteConfig.title, "description" to websiteConfig.description)
+                )
+            }
         }
 
         get("/help") {
             call.respondFTL("help.ftl")
         }
-        
+
         get("/docs") {
             call.respondRedirect("/help")
         }
@@ -67,7 +76,9 @@ fun Application.configureRouting() {
 //                // Alipay
 //                // TODO Redirect Alipay
 //            } else call.respondFTL("donate.ftl")
-            call.respondFTL("donate.ftl")
+            checkOfficial(call) { call ->
+                call.respondFTL("donate.ftl")
+            }
         }
 
         get("/api") {
@@ -79,33 +90,34 @@ fun Application.configureRouting() {
         }
 
         get("/mirror") {
+            // 镜像源移到 mirror.mcip.link
             call.respondRedirect("/help/#/website/mirror")
         }
-
-        get("/mirror/textures/{path...}") {
-            val path = call.parameters.getAll("path")
-            val target = path!!.joinToString("/")
-            val targetFile = mirrorDir.resolve("textures").resolve(target)
-            if (targetFile.exists()) call.respond(targetFile.inputStream())
-            else {
-                // cache
-                val url = "https://textures.lunarclientcdn.com/$target"
-                val request = Request.Builder()
-                    .url(url)
-                    .get()
-                    .build()
-                with(httpClient.newCall(request).execute()) {
-                    this.body?.bytes()?.let { it ->
-                        targetFile.apply {
-                            targetFile.parentFile.mkdirs()
-                            createNewFile()
-                            writeBytes(it)
-                        }
-                    }
-                }
-                call.respond(targetFile.inputStream())
-            }
-        }
+//
+//        get("/mirror/textures/{path...}") {
+//            val path = call.parameters.getAll("path")
+//            val target = path!!.joinToString("/")
+//            val targetFile = mirrorDir.resolve("textures").resolve(target)
+//            if (targetFile.exists()) call.respond(targetFile.inputStream())
+//            else {
+//                // cache
+//                val url = "https://textures.lunarclientcdn.com/$target"
+//                val request = Request.Builder()
+//                    .url(url)
+//                    .get()
+//                    .build()
+//                with(httpClient.newCall(request).execute()) {
+//                    this.body?.bytes()?.let { it ->
+//                        targetFile.apply {
+//                            targetFile.parentFile.mkdirs()
+//                            createNewFile()
+//                            writeBytes(it)
+//                        }
+//                    }
+//                }
+//                call.respond(targetFile.inputStream())
+//            }
+//        }
 
         post("/webhook/gh-release") {
             val file = configDir.resolve("celestial-cached.jar")
