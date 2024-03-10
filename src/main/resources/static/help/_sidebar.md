@@ -9,6 +9,7 @@
   [构建](celestial/build)
   [切换主题](celestial/theme)
   [API](celestial/api)
+  [针对原版API的更新](celestial/patches)
   [配置](celestial/config)
 
 - 网站
