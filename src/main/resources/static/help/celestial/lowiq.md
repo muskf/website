@@ -2,6 +2,15 @@
 
 > 最后更新日期 2024/4/5, 若出现变动请提出issue
 
+## 索引(常见错误)
+
+> 不认识外国文? 请查看如何[切换语言](#切换语言)!
+
+1. [Java版本错误](#错误的java版本)
+2. [API无法连接](#为什么无法连接到api)
+3. [配置代理](#配置删除代理)
+4. [无法自动下载mod loader](#手动补全mod-loader)
+
 ## 认识celestial/lunarcn的目录/文件
 
 d如果你在使用Windows操作系统, `~`等价于`%userprofile%` (`$userprofile`)
@@ -74,3 +83,64 @@ LCCN API 已停止运营, 请查看条目[切换到moonsworth api](#切换到moo
 等待贡献, 我不用Windows, 可参考[这篇文章](https://cloud.tencent.com/developer/article/2091973)
 
 Windows 11原生支持DOH, 请求是加密的, 可以试试.
+
+## Java报错
+
+> 请务必使用JDK17 (不要用JRE)
+
+### Linux上特有的headless JRE
+
+请不要使用headless jre, 你需要为它补额外的library
+
+lunarcn推荐使用[azul zulu17](https://azul.com)进行运行
+
+### 错误的Java版本
+
+> 此处特指Windows用户
+
+如果出现虚拟机错误, 请删除多余的Java(包括jre), 只留一个JDK17
+
+## 手动补全Mod Loader
+
+> LCCN Loader已弃用
+
+## 补全Weave Loader
+
+1. 打开[Weave-Loader/releases](https://github.com/Weave-MC/Weave-Loader/releases)
+2. 下载最新版本(jar)
+3. 将文件名改为`weave.jar` (Windows用户需要在系统中开启[显示扩展名](#显示扩展名))
+4. 移动到`$lccn/loaders`中
+
+## 切换语言
+
+> 在新版本中celestial已提供自动识别系统语言功能, 但是经常识别错误, 若有兴趣修复可提交pr
+
+1. 转到Settings (点击三次next)
+2. 找到Language
+3. 调整为中文
+
+### 我不小心调整成了韩文, 都是锟斤拷语言怎么办
+
+> 该问题仅存在于Windows
+
+请查看[重置启动器配置](celestial/config#恢复默认配置) 或者记位置改回去
+
+## 显示扩展名
+
+> 仅Windows用户
+
+我不用Windows, 请查看[Microsoft Support](https://support.microsoft.com/zh-cn/windows/windows-%E4%B8%AD%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%90%8D-da4a4430-8e76-89c5-59f7-1cdbbc75cb01)
+
+### Windows 8及以上
+
+1. 打开文件资源管理器(快捷键Win+E)
+2. 单击“视图”选项卡
+3. 选择`文件扩展名`
+4. 点击确认
+
+## Windows 7
+
+1. 在『开始』菜单搜索中,键入文件夹选项
+2. 在“文件夹选项”窗口中,单击“视图”选项卡
+3. 取消选择`隐藏已知文件类型的扩展名`
+4. 点击确认
