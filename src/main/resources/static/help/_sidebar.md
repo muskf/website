@@ -2,6 +2,7 @@
 - [欢迎](welcome.md)
 
 - Celestial
+  [小小小白话文](celestial/lowiq)
   [下载](celestial/download)
   [尚未完成的内容](celestial/wip)
   [启动](celestial/launch)
