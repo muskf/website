@@ -83,8 +83,14 @@ data class LunarModule(
 data class LauncherBlogpost(
     val title: String, val excerpt: String? = null, // only available on LCCN API
     val image: String, val link: String, val author: String? = null, // moonsworth removed this in v3.0.0
-    @SerialName("button_text") val buttonText: String? = null
-)
+    @SerialName("button_text") val buttonText: String? = null,
+    val type: ButtonType? = ButtonType.OPEN_LINK
+) {
+    enum class ButtonType {
+        OPEN_LINK,
+        CHANGE_API
+    }
+}
 
 @Serializable
 data class GameBlogpost(
