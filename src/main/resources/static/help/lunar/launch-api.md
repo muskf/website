@@ -47,7 +47,3 @@ post("$api/launcher/launch", Gson().toJson(json)).execute().use { response ->
     return JsonParser.parseString(response.body!!.string()).asJsonObject
 }
 ```
-
-## 示例响应
-
-[1.8.9-lunar.json](https://www.lunarclient.top/1.8.9-lunar.json)

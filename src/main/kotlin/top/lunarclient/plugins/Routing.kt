@@ -63,6 +63,11 @@ fun Application.configureRouting() {
             call.respondRedirect("/lccn")
         }
 
+        get("/celestial/gh") {
+            // github
+            call.respondRedirect("https://github.com/CubeWhyMC/celestial")
+        }
+
         get("/lunarcn") {
             call.respondRedirect("/lccn")
         }
