@@ -4,9 +4,9 @@ val logback_version: String by project
 
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    id("io.ktor.plugin") version "2.3.8"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
+    kotlin("jvm") version "1.9.23"
+    id("io.ktor.plugin") version "2.3.9"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
 }
 
 group = "top.lunarclient"
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("cn.hutool:hutool-crypto:5.8.26")
+    implementation("cn.hutool:hutool-crypto:5.8.27")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
