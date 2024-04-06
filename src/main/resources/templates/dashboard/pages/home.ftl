@@ -15,21 +15,9 @@
             用户信息
         </div>
         <div class="layui-card-body">
-            <p>名称: <%= username %></p>
-            <p>邮箱: <%= email %></p>
-            <p>Minecraft账户名(不显示的话就是没有): <%= mcIgn %></p>
+            <p>名称: ${username}</p>
+            <p>权限组: ${role}</p>
         </div>
-        <form class="layui-form" method="post" action="/users/bindmc">
-            <div class="layui-card-body">
-                <div class="layui-input-group">
-                    <div class="layui-input-prefix">修改MC绑定:</div>
-                    <input type="text" name="ign" class="layui-input" value="<%= mcIgn %>" placeholder="cubewhy">
-                    <div class="layui-input-suffix">
-                        <button class="layui-btn" lay-submit lay-filter="save">保存</button>
-                    </div>
-                </div>
-            </div>
-        </form>
     </div>
     <br><br>
 </div>

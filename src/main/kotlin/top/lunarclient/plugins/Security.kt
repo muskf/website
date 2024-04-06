@@ -7,14 +7,9 @@ import io.ktor.server.sessions.*
 import top.lunarclient.UserInfo
 import top.lunarclient.findUser
 
-data class UserSession(
-    val name: String,
-    val password: String
-) : Principal
-
 fun Application.configureSecurity() {
     install(Sessions) {
-        cookie<UserSession>("user_session")
+        cookie<UserInfo>("user_session")
     }
     install(Authentication) {
         form("auth-form") {
@@ -23,7 +18,7 @@ fun Application.configureSecurity() {
             validate { credentials ->
                 val user = findUser(credentials.name)
                 if (user != null && user.assertPasswd(credentials.password)) {
-                    user.toSession()
+                    user
                 } else {
                     null
                 }
@@ -33,7 +28,7 @@ fun Application.configureSecurity() {
             }
         }
 
-        session<UserSession>("auth-session") {
+        session<UserInfo>("auth-session") {
             validate { session ->
                 session
             }
@@ -43,5 +38,3 @@ fun Application.configureSecurity() {
         }
     }
 }
-
-private fun UserInfo.toSession(): Principal = UserSession(this.username, this.password)

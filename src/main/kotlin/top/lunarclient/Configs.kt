@@ -1,6 +1,7 @@
 package top.lunarclient
 
 import cn.hutool.crypto.SecureUtil.md5
+import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -10,10 +11,10 @@ import kotlin.io.path.Path
 
 val JSON = Json { ignoreUnknownKeys = true; prettyPrint = true; encodeDefaults = true }
 
-// 阻止除www.lunarclient.top和127.0.0.1的访问, 对API不生效
+// 阻止除lunarclient.top和127.0.0.1的访问, 对API和文档不生效
 const val BLOCK_UNOFFICIAL_HOST = true
 
-val KNOWN_HOSTS = mutableListOf("www.lunarclient.top", "lunarclient.top", "www.lunarcn.top", "lunarcn.top", "www.lunarcn.lol", "lunarcn.lol", "127.0.0.1")
+val KNOWN_HOSTS = mutableListOf("lunarclient.top", "lunarcn.lol", "127.0.0.1")
 
 val configDir = File(
     System.getProperty("user.home"),
@@ -35,6 +36,7 @@ val pluginsDir = configDir.resolve("plugins").apply {
 }
 
 val configFile: File = configDir.resolve("config.json")
+val shortLinkFile: File = configDir.resolve("links.json")
 
 val usersFile: File = Path(
     System.getProperty("user.home"),
@@ -55,6 +57,16 @@ val websiteConfig = try {
     }
 }
 
+val shortLinkConfig = try {
+    JSON.decodeFromString<ShortLinkConfig>(
+        shortLinkFile.readText()
+    )
+} catch (e: Exception) {
+    ShortLinkConfig().apply {
+        shortLinkFile.writeText(JSON.encodeToString(ShortLinkConfig.serializer(), this))
+    }
+}
+
 val users = try {
     JSON.decodeFromString<Map<String, UserInfo>>(
         usersFile.readText()
@@ -66,6 +78,21 @@ val users = try {
 }
 
 fun findUser(name: String) = users[name]
+
+
+@Serializable
+data class ShortLinkConfig(
+    val links: MutableList<ShortLink> = mutableListOf()
+) {
+    @Serializable
+    data class ShortLink(val name: String, val target: String)
+
+    fun add(name: String, target: String) = links.add(ShortLink(name, target))
+    fun save() =
+        shortLinkFile.writeText(JSON.encodeToString(serializer(), this))
+
+    operator fun get(name: String) = links.find { it.name == name}
+}
 
 
 @Serializable
@@ -92,7 +119,15 @@ class WebsiteConfig {
 @Serializable
 data class UserInfo(
     val username: String,
-    val password: String
-) {
+    val password: String,
+    val role: Role = Role.USER
+) : Principal {
+    enum class Role {
+        USER,
+        SUPPORTER,
+        STAFF,
+        ADMIN
+    }
+
     fun assertPasswd(passwd: String) = md5(passwd) == password
 }

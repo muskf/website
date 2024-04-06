@@ -187,9 +187,20 @@ fun Application.configureRouting() {
             }
         }
 
+        get("/s/{name}") {
+            // short link
+            val name = call.parameters["name"]!!
+            val target = shortLinkConfig[name]?.target
+            if (target != null) {
+                call.respondRedirect(target) // do redirect
+            } else {
+                call.respond(HttpStatusCode.NotFound, "Not found")
+            }
+        }
+
         authenticate("auth-form") {
             post("/dashboard/login") {
-                call.sessions.set(call.principal<UserSession>())
+                call.sessions.set(call.principal<UserInfo>())
                 call.respondRedirect("/dashboard")
             }
 
@@ -200,7 +211,7 @@ fun Application.configureRouting() {
 
         authenticate("auth-session") {
             get("/dashboard") {
-                val data = mapOf("user" to (call.authentication.principal<UserSession>()?.name ?: "Unknown User"))
+                val data = mapOf("user" to (call.authentication.principal<UserInfo>()?.username ?: "Unknown User"))
                 call.respondFTL("dashboard/index.ftl", data)
             }
 
@@ -208,7 +219,10 @@ fun Application.configureRouting() {
                 val pageName = call.parameters["page"]
                 val data = when (pageName) {
                     "home" -> {
-                        mapOf("username" to call.authentication.principal<UserSession>()?.name)
+                        mapOf(
+                            "username" to call.authentication.principal<UserInfo>()?.username,
+                            "role" to call.authentication.principal<UserInfo>()?.role
+                        )
                     }
 
                     else -> {
@@ -218,8 +232,21 @@ fun Application.configureRouting() {
                 call.respondFTL("dashboard/pages/$pageName.ftl", data)
             }
 
+            post("/dashboard/short-link/add") {
+                val linkName = call.request.queryParameters["name"]
+                val linkTarget = call.request.queryParameters["target"]
+                // create a fast link
+                if (linkTarget != null && linkName != null) {
+                    shortLinkConfig.add(linkName, linkTarget)
+                    shortLinkConfig.save() // save
+                    call.respond("OK!")
+                    return@post
+                }
+                call.respond("NULL!")
+            }
+
             get("/dashboard/logout") {
-                call.sessions.clear<UserSession>()
+                call.sessions.clear<UserInfo>()
                 call.respondRedirect("/dashboard/login")
             }
         }
