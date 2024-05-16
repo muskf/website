@@ -15,6 +15,7 @@
 
 - 网站
   [镜像](website/mirror)
+  [伟大的校规](website/fuck)
   [为我们添砖加瓦](website/openpr)
 
 
