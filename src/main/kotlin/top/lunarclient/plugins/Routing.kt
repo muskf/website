@@ -55,6 +55,10 @@ fun Application.configureRouting() {
             call.respondFTL("help.ftl")
         }
 
+        get("/weareback") {
+            call.respondFTL("back.ftl")
+        }
+
         get("/docs") {
             call.respondRedirect("/help")
         }
