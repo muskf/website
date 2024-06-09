@@ -55,6 +55,10 @@ fun Application.configureRouting() {
             call.respondFTL("help.ftl")
         }
 
+        get("/weareback") {
+            call.respondFTL("back.ftl")
+        }
+
         get("/docs") {
             call.respondRedirect("/help")
         }
@@ -70,6 +74,10 @@ fun Application.configureRouting() {
 
         get("/lunarcn") {
             call.respondRedirect("/lccn")
+        }
+
+        get("/weareback") {
+            call.respondRedirect("/weareback")
         }
 
         get("/donate") {
