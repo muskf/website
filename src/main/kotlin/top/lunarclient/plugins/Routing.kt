@@ -76,10 +76,6 @@ fun Application.configureRouting() {
             call.respondRedirect("/lccn")
         }
 
-        get("/weareback") {
-            call.respondRedirect("/weareback")
-        }
-
         get("/donate") {
 //            val ua = call.request.headers["User-Agent"]!!
 //            if ("micromessenger" in ua) {
