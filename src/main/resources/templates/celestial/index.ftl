@@ -18,7 +18,7 @@
   <!-- icon -->
   <script src="/js/theme.js"></script>
   <!-- lenis -->
-  <script src="https://unpkg.com/@studio-freight/lenis/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.2/dist/lenis.min.js"></script>
   <script src="/js/lenis.js"></script>
 </head>
 <body data-lenis-prevent-touch>
@@ -42,25 +42,25 @@
       color: #fff !important;
     }
 
-    html.lenis {
-      height: auto;
-    }
+  html.lenis, html.lenis body {
+  height: auto;
+  }
 
-    .lenis.lenis-smooth {
-      scroll-behavior: auto;
-    }
+  .lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+  }
 
-    .lenis.lenis-smooth [data-lenis-prevent] {
-      overscroll-behavior: contain;
-    }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+  }
 
-    .lenis.lenis-stopped {
-      overflow: hidden;
-    }
+  .lenis.lenis-stopped {
+  overflow: hidden;
+  }
 
-    .lenis.lenis-scrolling iframe {
-      pointer-events: none;
-    }
+  .lenis.lenis-smooth iframe {
+  pointer-events: none;
+  }
   </style>
 
   <!-- Navbar -->
