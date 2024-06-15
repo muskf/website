@@ -17,9 +17,6 @@
   <script type="text/javascript" src="/js/sweetalert.js"></script>
   <!-- icon -->
   <script src="/js/theme.js"></script>
-  <!-- lenis -->
-  <script src="https://unpkg.com/lenis@1.1.2/dist/lenis.min.js"></script>
-  <script src="/js/lenis.js"></script>
 </head>
 <body data-lenis-prevent-touch>
 <!--Main Navigation-->
